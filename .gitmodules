@@ -1,0 +1,3 @@
+[submodule "third_party/llvm"]
+	path = third_party/llvm
+	url = https://github.com/idc/llvm_elf_headers.git
