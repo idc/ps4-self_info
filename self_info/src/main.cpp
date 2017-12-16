@@ -165,7 +165,8 @@ int main(int argc, char* argv[])
   base_header_size += sizeof(self_header);
   base_header_size += sizeof(self_segment_header) * header.segment_count;
   base_header_size += elf_header_size;
-  base_header_size += ((program_count * program_header_size) + 15) & ~15;
+  base_header_size += program_count * program_header_size;
+  base_header_size += 15; base_header_size &= ~15; // align
 
   if (header.header_size - base_header_size >= sizeof(self_info))
   {
