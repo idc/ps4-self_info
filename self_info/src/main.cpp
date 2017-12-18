@@ -21,7 +21,7 @@ struct self_header
   uint32_t unknown04;
   uint32_t unknown08;
   uint16_t header_size;
-  uint16_t unknown0E;
+  uint16_t unknown_size;
   uint32_t file_size;
   uint32_t unknown14;
   uint16_t segment_count;
@@ -34,7 +34,7 @@ struct self_segment_header
   uint32_t flags;
   uint32_t unknown04;
   hilo64_t offset;
-  hilo64_t block_table_size;
+  hilo64_t compressed_size;
   hilo64_t uncompressed_size;
 };
 
@@ -42,8 +42,8 @@ struct self_info
 {
   hilo64_t id;
   hilo64_t unknown08;
-  hilo64_t unknown10;
-  hilo64_t unknown18;
+  hilo64_t system_version_1;
+  hilo64_t system_version_2;
   uint8_t content_id[32];
 };
 
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
   printf("  unknown 04 .......: %08x\n", header.unknown04);
   printf("  unknown 08 .......: %08x\n", header.unknown08);
   printf("  header size ......: %x\n", header.header_size);
-  printf("  unknown 0E .......: %x\n", header.unknown0E);
+  printf("  unknown size .....: %x\n", header.unknown_size);
   printf("  file size ........: %x\n", header.file_size);
   printf("  unknown 14 .......: %08x\n", header.unknown14);
   printf("  segment count ....: %u\n", header.segment_count);
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
     printf(" [%d]\n", i);
     printf("  flags ............: %08x\n", segment_header.flags);
     printf("  offset ...........: %llx\n", segment_header.offset.v);
-    printf("  block table size .: %llx\n", segment_header.block_table_size.v);
+    printf("  compressed size ..: %llx\n", segment_header.compressed_size.v);
     printf("  uncompressed size : %llx\n", segment_header.uncompressed_size.v);
   }
   printf("\n");
@@ -175,10 +175,10 @@ int main(int argc, char* argv[])
     if (fread(&info, sizeof(self_info), 1, handle) == 1)
     {
       printf("SELF info:\n");
-      printf("  id ...............: %08x%08x\n", info.id.hi, info.id.lo);
+      printf("  auth id ..........: %08x%08x\n", info.id.hi, info.id.lo);
       printf("  unknown 08 .......: %llx\n", info.unknown08.v);
-      printf("  unknown 10 .......: %llx\n", info.unknown10.v);
-      printf("  unknown 18 .......: %llx\n", info.unknown18.v);
+      printf("  system version 1 .: %llx\n", info.system_version_1.v);
+      printf("  system version 2 .: %llx\n", info.system_version_2.v);
       printf("  content id .......:");
       for (int i = 0; i < 16; i++) printf(" %02x", info.content_id[i]);
       printf("\n");
